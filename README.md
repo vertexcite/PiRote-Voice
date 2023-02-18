@@ -1,4 +1,6 @@
-# Speech Recognition Using Web Speech API in JavaScript
+# Practice Pi digits using voice (i.e. speech to text)
 
-If you'd like to learn how to build this application, refer to [this article](https://zolomohan.hashnode.dev/speech-recognition-in-javascript).
+Based on https://github.com/zolomohan/speech-recognition-in-javascript
+
+As at February 2023, requires using Chrome.
 
