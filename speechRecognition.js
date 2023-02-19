@@ -41,8 +41,10 @@ if ("webkitSpeechRecognition" in window) {
 
     if (event.results[last_index].isFinal) {
       const chunk = (event.results[last_index][0].transcript).replace(/\s/g, '');  // remove all whitespace from chunk
-      latest_final = chunk;
-      render(chunk, results);
+      if(chunk.length > 0) {
+        latest_final = chunk;
+        render(chunk, results);
+      }
     } else {
 
       interim_transcript = "";
