@@ -40,10 +40,11 @@ if ("webkitSpeechRecognition" in window) {
     const last_index = event.results.length - 1;
 
     if (event.results[last_index].isFinal) {
-      const chunk = (event.results[last_index][0].transcript).replace(/\s/g, '');  // remove all whitespace from chunk
+      const latest_transcript = event.results[last_index][0].transcript;
+      const chunk = substitutions(latest_transcript);  // remove all whitespace from chunk
       if(chunk.length > 0) {
         latest_final = chunk;
-        render(chunk, results);
+        render(chunk, results, `latest_transcript: ${latest_transcript}`);
       }
     } else {
 
@@ -55,12 +56,12 @@ if ("webkitSpeechRecognition" in window) {
         }
       }
 
-      render(interim_transcript, results);
+      render(interim_transcript, results, `raw interim: ${interim_transcript}`);
     }
   };
 
   function save_to_results_array(x) {
-    results += x.replace(/\s/g, '')
+    results += substitutions(x)
   }
 
   document.querySelector("#start").onclick = () => {
@@ -95,10 +96,31 @@ if ("webkitSpeechRecognition" in window) {
   console.log("Speech Recognition Not Available")
 }
 
-function render(interim_transcript, results) {
+function substitutions(latest_transcript) {
+  return latest_transcript
+  .toLowerCase()
+  .replace(/\s/g, '')
+  .replace(/\//g, '')
+  .replace(/oh/g, '0')
+  .replace(/to/g, '2')
+  .replace(/-/g, '')
+  .replace(/for/g, '4')
+  .replace(/zero/g, '0') 
+  .replace(/one/g, '1')
+  .replace(/two/g, '2')
+  .replace(/three/g, '3')
+  .replace(/four/g, '4')
+  .replace(/five/g, '5')
+  .replace(/six/g, '6')
+  .replace(/seven/g, '7')
+  .replace(/eight/g, '8')
+  .replace(/nine/g, '9')
+}
+
+function render(interim_transcript, results, debug="") {
   let final_transcript = results
 
-  final_and_interim = (final_transcript + interim_transcript).replace(/\s/g, '')
+  final_and_interim = substitutions(final_transcript + interim_transcript)
   
   // create a string that has spaces in every position that final_transcript matches piString, and an 'X' in every position that it doesn't
   let assessment = "";
@@ -118,13 +140,12 @@ function render(interim_transcript, results) {
 
   const display_count = 35;
   document.querySelector("#final").innerHTML = makeGrouped(final_transcript, grouping_shift, headstart_count).slice(-display_count);
-  const interim_no_whitespace = interim_transcript.replace(/\s/g, '');
+  const interim_no_whitespace = substitutions(interim_transcript)
   document.querySelector("#interim").innerHTML = makeGrouped(interim_no_whitespace, grouping_shift, final_transcript.length + headstart_count);
   document.querySelector("#assessment").innerHTML = makeGrouped(assessment, grouping_shift, headstart_count).slice(-display_count-interim_no_whitespace.length);
   document.querySelector("#counts").innerHTML = `Correct: ${correct} <br>  Errors: ${errors} <br>  Total: ${correct + errors}`
 
-  document.querySelector("#debug").innerHTML = `
-  `
+  document.querySelector("#debug").innerHTML = `Debug info: ${debug}`
 }
 
 function makeGrouped(x, remainder, starting_grouping_from) {
