@@ -2,5 +2,9 @@
 
 Based on https://github.com/zolomohan/speech-recognition-in-javascript
 
-As at February 2023, requires using Chrome.
+As at  2023-03-14 (Pi day ;-), requires using Chrome or Safari.
+
+Still a lot of room from improvement, please feel free to contribute improvements.
+
+Mostly "tested" on macOS and Android so far.
 
